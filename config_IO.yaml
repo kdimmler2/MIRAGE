@@ -1,0 +1,4 @@
+sample_vcf: /panfs/jay/groups/27/mccuem/dimml002/NuGEN/targets/NuGEN_CommonVariation.vcf.gz 
+sample_vcf_tbi: /panfs/jay/groups/27/mccuem/dimml002/NuGEN/targets/NuGEN_CommonVariation.vcf.gz.tbi
+reference_panel: ../reference_panel/RaceOnly/ref.vcf.gz
+reference_panel_tbi: ../reference_panel/RaceOnly/ref.vcf.gz.tbi

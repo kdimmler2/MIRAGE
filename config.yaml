@@ -1,0 +1,8 @@
+vcf_to_mask: /panfs/jay/groups/27/mccuem/dimml002/NuGEN/targets/STDB/STDB_No_Missing_Data.vcf.gz 
+vcf_to_mask_tbi: /panfs/jay/groups/27/mccuem/dimml002/NuGEN/targets/STDB/STDB_No_Missing_Data.vcf.gz.tbi
+iterations: 1
+mask_proportion: 0.1
+reference_panel: /panfs/jay/groups/27/mccuem/dimml002/NuGEN/Imputation/reference_panel/RaceOnly/isec_STDB/STDB_ref_NoOverlappingSamples.vcf.gz 
+reference_panel_tbi: /panfs/jay/groups/27/mccuem/dimml002/NuGEN/Imputation/reference_panel/RaceOnly/isec_STDB/STDB_ref_NoOverlappingSamples.vcf.gz.tbi
+breed: Standardbred
+breed_ab: SB

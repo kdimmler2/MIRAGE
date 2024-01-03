@@ -1,0 +1,57 @@
+{
+    "mask" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/%j.{rule}.out",
+        "error" : ".logs/{rule}/{wildcards.itr}/%j.{rule}.err"
+    },
+    "split_phased" :
+    {
+        "output" : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.err"
+    },
+    "split_masked" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/%j.{rule}.err"
+    },
+    "beagle40_impute" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/%j.{rule}.err"
+    },
+    "imputed_list" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/{wildcards.itr}/%j.{rule}.err"
+    },
+    "combine_imputed" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/{wildcards.itr}/%j.{rule}.err"
+    },
+    "to_table" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/{wildcards.itr}/%j.{rule}.err"
+    },
+    "compare_genos" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/{wildcards.itr}/%j.{rule}.err"
+    },
+    "remove_imputed" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/{wildcards.itr}/%j.{rule}.err"
+    },
+    "combine_vcfs" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/{wildcards.itr}/%j.{rule}.err"
+    },
+    "plink_missing" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/{wildcards.itr}/%j.{rule}.err"
+    },
+}

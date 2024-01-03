@@ -1,0 +1,27 @@
+{
+    "split_phased" :
+    {
+        "output" : ".logs/{rule}/{wildcards.chrom}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/{wildcards.chrom}/%j.{rule}.err"
+    },
+    "split_sample" :
+    {
+        "output" : ".logs/{rule}/{wildcards.chrom}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/{wildcards.chrom}/%j.{rule}.err"
+    },
+    "beagle40_impute" :
+    {
+        "output" : ".logs/{rule}/{wildcards.chrom}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/{wildcards.chrom}/%j.{rule}.err"
+    },
+    "imputed_list" :
+    {
+        "output" : ".logs/{rule}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/%j.{rule}.err"
+    },
+    "combine_imputed" :
+    {
+        "output" : ".logs/{rule}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/%j.{rule}.err"
+    }
+}
