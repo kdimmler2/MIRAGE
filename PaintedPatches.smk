@@ -118,12 +118,15 @@ rule beagle40_impute:
         cpus    = 4
     shell:
         '''
-            java -jar beagle.27Jan18.7e1.jar \
-            gl={input.sample_vcf} \
+            java -jar beagle.22Jul22.46e.jar \
+            gt={input.sample_vcf} \
+            chrom=chr{wildcards.chrom} \
             map=recombination_maps/{params.breed}/beagle_maps/BEAGLE_{params.breed_ab}_ECA{wildcards.chrom}_map.txt \
             ref={input.phased_vcf} \
             nthreads={threads} \
-            impute=false \
+            impute=true \
+            gp=true \
+            ap=true \
             out={params.prefix}
 
             gatk IndexFeatureFile -I {output.imputed_vcf} 
@@ -191,7 +194,7 @@ rule to_table:
         mem_mb = 24000
     shell:
         '''
-             bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%AF\t%QUAL\t%FILTER\t[%DS\t]\n' -H {input.imputed_vcf}  > {output.imputed_table}
+             bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%AF\t%QUAL\t%FILTER\t[%GT\t]\n' -H {input.imputed_vcf}  > {output.imputed_table}
 
              bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%AF\t%QUAL\t%FILTER\t[%GT\t]\n' -H {input.original_vcf}  > {output.original_table}
 

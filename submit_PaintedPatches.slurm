@@ -17,7 +17,7 @@ cd $SLURM_SUBMIT_DIR
 
 conda activate nugen 
 
-snakemake -s PaintedPatches.smk \
+snakemake -s 54_PaintedPatches.smk \
     --profile slurm.PaintedPatches/ \
     --configfile config.yaml \
     --rerun-triggers mtime \
