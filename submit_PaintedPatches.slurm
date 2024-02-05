@@ -15,9 +15,9 @@ set -e
 
 cd $SLURM_SUBMIT_DIR
 
-conda activate nugen 
+micromamba activate impute
 
-snakemake -s 54_PaintedPatches.smk \
+snakemake -s PaintedPatches.smk \
     --profile slurm.PaintedPatches/ \
     --configfile config.yaml \
     --rerun-triggers mtime \

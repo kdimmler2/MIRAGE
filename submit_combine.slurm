@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#SBATCH -t 24:00:00
+#SBATCH -t 12:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
@@ -15,13 +15,11 @@ set -e
 
 cd $SLURM_SUBMIT_DIR
 
-micromamba activate impute
+micromamba activate combine_vcfs
 
-which bcftools
-
-snakemake -s PaintedPatches_IO.smk \
-    --profile slurm.PaintedPatches_IO/ \
-    --configfile config_IO.yaml \
+snakemake -s combine.smk \
+    --profile slurm.combine/ \
     --rerun-triggers mtime \
     --keep-going \
-    --use-conda \
+    --use-conda
+

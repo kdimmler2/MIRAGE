@@ -1,0 +1,47 @@
+{
+    "split_nugen" :
+    {
+        "output" : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.err"
+    },
+    "plink_nugen" :
+    {
+        "output" : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.err"
+    },
+    "split_stitch" :
+    {
+        "output" : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.err"
+    },
+    "combine" :
+    {
+        "output" : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.err"
+    },
+    "plink_combined" :
+    {
+        "output" : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.err"
+    },
+    "compare_rate" :
+    {
+        "output" : ".logs/{rule}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/%j.{rule}.err"
+    },
+    "zip_index" :
+    {
+        "output" : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.err"
+    },
+    "vcf_list" :
+    {
+        "output" : ".logs/{rule}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/%j.{rule}.err"
+    },
+    "MergeVcfs" :
+    {
+        "output" : ".logs/{rule}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/%j.{rule}.err"
+    },
+}

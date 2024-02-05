@@ -1,18 +1,18 @@
 {
     "split_phased" :
     {
-        "output" : ".logs/{rule}/{wildcards.chrom}/%j.{rule}.out",
-        "error"  : ".logs/{rule}/{wildcards.chrom}/%j.{rule}.err"
+        "output" : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.err"
     },
     "split_sample" :
     {
-        "output" : ".logs/{rule}/{wildcards.chrom}/%j.{rule}.out",
-        "error"  : ".logs/{rule}/{wildcards.chrom}/%j.{rule}.err"
+        "output" : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.err"
     },
     "beagle40_impute" :
     {
-        "output" : ".logs/{rule}/{wildcards.chrom}/%j.{rule}.out",
-        "error"  : ".logs/{rule}/{wildcards.chrom}/%j.{rule}.err"
+        "output" : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.err"
     },
     "imputed_list" :
     {

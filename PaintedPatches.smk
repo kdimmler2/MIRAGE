@@ -3,20 +3,20 @@ import random
 
 rule all:
     input:
-        expand('PaintedPatches/results/masked_vcfs/{itr}/masked_{itr}.vcf.gz', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/masked_vcfs/{itr}/masked_{itr}.vcf.gz.tbi', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/ref/split/chr{chrom}/chr{chrom}.vcf.gz', chrom=[f'{i}' for i in range(1,31)] + ['X']),
-        expand('PaintedPatches/results/ref/split/chr{chrom}/chr{chrom}.vcf.gz.tbi', chrom=[f'{i}' for i in range(1,31)] + ['X']),
-        expand('PaintedPatches/results/split/masked_vcfs/{itr}/chr{chrom}/masked.chr{chrom}.vcf.gz', chrom=[f'{i}' for i in range(1,31)] + ['X'], itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/split/masked_vcfs/{itr}/chr{chrom}/masked.chr{chrom}.vcf.gz.tbi', chrom=[f'{i}' for i in range(1,31)] + ['X'], itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/imputed/masked_{itr}/chr{chrom}/imputed.chr{chrom}.vcf.gz', chrom=[f'{i}' for i in range(1,31)] + ['X'], itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/imputed/masked_{itr}/chr{chrom}/imputed.chr{chrom}.vcf.gz.tbi', chrom=[f'{i}' for i in range(1,31)] + ['X'], itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/imputed/masked_{itr}/imputed.list', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/FINAL/masked_{itr}/imputed.vcf.gz', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/FINAL/masked_{itr}/imputed.vcf.gz.tbi', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/mask_assess/{itr}/imputed.table', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/mask_assess/{itr}/original.table', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/mask_assess/{itr}/masked.table', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
+        expand('PaintedPatches/results/masked_vcfs/{itr}/masked_{itr}.vcf.gz', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
+        expand('PaintedPatches/results/masked_vcfs/{itr}/masked_{itr}.vcf.gz.tbi', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
+        expand('PaintedPatches/results/ref/split/chr{chrom}/chr{chrom}.vcf.gz', chrom=[str(i) for i in range(1,31)] + ['X']),
+        expand('PaintedPatches/results/ref/split/chr{chrom}/chr{chrom}.vcf.gz.tbi', chrom=[str(i) for i in range(1,31)] + ['X']),
+        expand('PaintedPatches/results/split/masked_vcfs/{itr}/chr{chrom}/masked.chr{chrom}.vcf.gz', chrom=[str(i) for i in range(1,31)] + ['X'], itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
+        expand('PaintedPatches/results/split/masked_vcfs/{itr}/chr{chrom}/masked.chr{chrom}.vcf.gz.tbi', chrom=[str(i) for i in range(1,31)] + ['X'], itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
+        expand('PaintedPatches/results/imputed/masked_{itr}/chr{chrom}/imputed.chr{chrom}.vcf.gz', chrom=[str(i) for i in range(1,31)] + ['X'], itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
+        expand('PaintedPatches/results/imputed/masked_{itr}/chr{chrom}/imputed.chr{chrom}.vcf.gz.tbi', chrom=[str(i) for i in range(1,31)] + ['X'], itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
+        expand('PaintedPatches/results/imputed/masked_{itr}/imputed.list', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
+        expand('PaintedPatches/results/FINAL/masked_{itr}/imputed.vcf.gz', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
+        expand('PaintedPatches/results/FINAL/masked_{itr}/imputed.vcf.gz.tbi', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
+        expand('PaintedPatches/results/mask_assess/{itr}/imputed.table', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
+        expand('PaintedPatches/results/mask_assess/{itr}/original.table', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
+        expand('PaintedPatches/results/mask_assess/{itr}/masked.table', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
 #        expand('PaintedPatches/results/mask_assess/{itr}/mismatched_genos.txt', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
 #        expand('PaintedPatches/results/mask_assess/{itr}/remove_imputed.list', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
 #        expand('PaintedPatches/results/mask_assess/{itr}/README.txt', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
@@ -46,9 +46,10 @@ rule mask:
     params:
         seed = lambda wildcards, input: random.randint(1, 100),
         mask_proportion = config['mask_proportion'],
+        bcftools_directory = config['bcftools_directory']
     shell:
             '''
-                /panfs/jay/groups/27/mccuem/dimml002/mambaforge/envs/mask/bin/bcftools +setGT -o {output.masked_vcf} {input.vcf_to_mask} -- -t r:{params.mask_proportion} -s {params.seed} -n .
+                {params.bcftools_directory} +setGT -o {output.masked_vcf} {input.vcf_to_mask} -- -t r:{params.mask_proportion} -s {params.seed} -n .
                 
                 gatk IndexFeatureFile -I {output.masked_vcf}
 
@@ -118,15 +119,18 @@ rule beagle40_impute:
         cpus    = 4
     shell:
         '''
-            java -jar beagle.22Jul22.46e.jar \
-            gt={input.sample_vcf} \
+            java -jar beagle.27Jan18.7e1.jar \
+            gtgl={input.sample_vcf} \
             chrom=chr{wildcards.chrom} \
-            map=recombination_maps/{params.breed}/beagle_maps/BEAGLE_{params.breed_ab}_ECA{wildcards.chrom}_map.txt \
+            map=~/NuGEN/Imputation/reference_panel/beagle_54_all_breeds/recombination_maps/beagle_maps/BEAGLE_{params.breed}_ECA{wildcards.chrom}_map.txt \
             ref={input.phased_vcf} \
+			window=5000000 \
+			overlap=20000 \
+			ne=100 \
+			err=0.05 \
+			gprobs=true \
             nthreads={threads} \
             impute=true \
-            gp=true \
-            ap=true \
             out={params.prefix}
 
             gatk IndexFeatureFile -I {output.imputed_vcf} 
@@ -136,9 +140,9 @@ rule imputed_list:
     input:
         imputed_vcfs = sorted(expand(
         'PaintedPatches/results/imputed/masked_{itr}/{chrom}/imputed.{chrom}.vcf.{ext}',
-        chrom=[f'chr{i}' for i in range(1,31)] + ['chrX'], # NO CHROM M CORRECT?
+        chrom=['chr' + str(i) for i in range(1,31)] + ['chrX'], # NO CHROM M CORRECT?
         ext=['gz','gz.tbi'],
-        itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]
+        itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]
         ))
     output:
         sorted_list = 'PaintedPatches/results/imputed/masked_{itr}/imputed.list',
@@ -150,7 +154,7 @@ rule imputed_list:
         # drop indices from input
         for itr in range(1, config['iterations'] + 1):
             outfile = open('PaintedPatches/results/imputed/masked_set' + str(itr) + '/imputed.list', 'wt')
-            for chrom in range(1,31):
+            for chrom in range(1,32):
                 print('PaintedPatches/results/imputed/masked_set' + str(itr) + '/chr' + str(chrom) + '/imputed.chr' + str(chrom) + '.vcf.gz',
                     file = outfile)
 
@@ -159,9 +163,9 @@ rule combine_imputed:
         sorted_list = 'PaintedPatches/results/imputed/masked_{itr}/imputed.list', 
         imputed_vcfs = sorted(expand(
         'PaintedPatches/results/imputed/masked_{itr}/{chrom}/imputed.{chrom}.vcf.{ext}', 
-        chrom=[f'chr{i}' for i in range(1,31)] + ['chrX'], # NO CHROM M CORRECT?
+        chrom=['chr' + str(i) for i in range(1,31)] + ['chrX'], # NO CHROM M CORRECT?
         ext=['gz','gz.tbi'],
-        itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]
+        itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]
         ))
     output:
         sorted_vcf = 'PaintedPatches/results/FINAL/masked_{itr}/imputed.vcf.gz',
@@ -194,11 +198,11 @@ rule to_table:
         mem_mb = 24000
     shell:
         '''
-             bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%AF\t%QUAL\t%FILTER\t[%GT\t]\n' -H {input.imputed_vcf}  > {output.imputed_table}
+             bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%AF\t%DR2\t%QUAL\t%FILTER\t[%DS\t]\n' -H {input.imputed_vcf}  > {output.imputed_table}
 
-             bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%AF\t%QUAL\t%FILTER\t[%GT\t]\n' -H {input.original_vcf}  > {output.original_table}
+             bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%AF\t%AC\t%QUAL\t%FILTER\t[%GT\t]\n' -H {input.original_vcf}  > {output.original_table}
 
-             bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%AF\t%QUAL\t%FILTER\t[%GT\t]\n' -H {input.masked_vcf}  > {output.masked_table}
+             bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%AF\t%AC\t%QUAL\t%FILTER\t[%GT\t]\n' -H {input.masked_vcf}  > {output.masked_table}
     
         '''
 

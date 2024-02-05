@@ -1,4 +1,7 @@
-sample_vcf: /panfs/jay/groups/27/mccuem/dimml002/NuGEN/targets/NuGEN_CommonVariation.vcf.gz 
-sample_vcf_tbi: /panfs/jay/groups/27/mccuem/dimml002/NuGEN/targets/NuGEN_CommonVariation.vcf.gz.tbi
-reference_panel: ../reference_panel/RaceOnly/ref.vcf.gz
-reference_panel_tbi: ../reference_panel/RaceOnly/ref.vcf.gz.tbi
+sample_vcf: stitch/results/for_beagle.vcf.gz
+sample_vcf_tbi: stitch/results/for_beagle.vcf.gz 
+reference_panel: /panfs/jay/groups/27/mccuem/dimml002/NuGEN/Imputation/reference_panel/beagle_54_all_breeds/isec2/ref.beagle.stitch.vcf.gz 
+reference_panel_tbi: /panfs/jay/groups/27/mccuem/dimml002/NuGEN/Imputation/reference_panel/beagle_54_all_breeds/isec2/ref.beagle.stitch.vcf.gz.tbi
+bcftools_directory: /panfs/jay/groups/27/mccuem/dimml002/micromamba/envs/impute/bin/bcftools
+breed: Averaged
+breed_ab: TB
