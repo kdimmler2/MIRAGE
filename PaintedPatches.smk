@@ -1,42 +1,271 @@
 import gzip
 import random
 
+#chroms = ['12', '20', '23', '27']
+#chroms = ['27', '12', '23']
+chroms = [str(i) for i in range(1,32)]
+
+itrs = ['set' + str(i) for i in range(1, config['iterations'] + 1)]
+#itrs = ['set1']
+
+#bins_list = {"0.10_0.15": (0.1, 0.15),
+#            "0.15_0.20": (0.15, 0.20)
+#}
+
+#bins_list = {
+#    "0.01_0.02": (0.01, 0.02),
+#    "0.02_0.05": (0.02, 0.05),
+#    "0.05_0.10": (0.05, 0.10),
+#    "0.10_0.15": (0.10, 0.15),
+#    "0.15_0.20": (0.15, 0.20),
+#    "0.20_0.25": (0.20, 0.25),
+#    "0.25_0.30": (0.25, 0.30),
+#    "0.30_0.35": (0.30, 0.35),
+#    "0.35_0.40": (0.35, 0.40),
+#    "0.40_0.45": (0.40, 0.45),
+#    "0.45_0.50": (0.45, 0.50)
+#}
+
+
+bins_list = {
+    "0_0.05": (0, 0.05),
+    "0.05_0.15": (0.05, 0.15),
+    "0.15_0.25": (0.15, 0.25),
+    "0.25_0.35": (0.25, 0.35),
+    "0.35_0.50": (0.35, 0.50)
+}
+
+bins = bins_list.keys()
+
 rule all:
     input:
-        expand('PaintedPatches/results/masked_vcfs/{itr}/masked_{itr}.vcf.gz', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/masked_vcfs/{itr}/masked_{itr}.vcf.gz.tbi', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/ref/split/chr{chrom}/chr{chrom}.vcf.gz', chrom=[str(i) for i in range(1,31)] + ['X']),
-        expand('PaintedPatches/results/ref/split/chr{chrom}/chr{chrom}.vcf.gz.tbi', chrom=[str(i) for i in range(1,31)] + ['X']),
-        expand('PaintedPatches/results/split/masked_vcfs/{itr}/chr{chrom}/masked.chr{chrom}.vcf.gz', chrom=[str(i) for i in range(1,31)] + ['X'], itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/split/masked_vcfs/{itr}/chr{chrom}/masked.chr{chrom}.vcf.gz.tbi', chrom=[str(i) for i in range(1,31)] + ['X'], itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/imputed/masked_{itr}/chr{chrom}/imputed.chr{chrom}.vcf.gz', chrom=[str(i) for i in range(1,31)] + ['X'], itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/imputed/masked_{itr}/chr{chrom}/imputed.chr{chrom}.vcf.gz.tbi', chrom=[str(i) for i in range(1,31)] + ['X'], itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/imputed/masked_{itr}/imputed.list', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/FINAL/masked_{itr}/imputed.vcf.gz', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/FINAL/masked_{itr}/imputed.vcf.gz.tbi', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/mask_assess/{itr}/imputed.table', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/mask_assess/{itr}/original.table', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
-        expand('PaintedPatches/results/mask_assess/{itr}/masked.table', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
-#        expand('PaintedPatches/results/mask_assess/{itr}/mismatched_genos.txt', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-#        expand('PaintedPatches/results/mask_assess/{itr}/remove_imputed.list', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-#        expand('PaintedPatches/results/mask_assess/{itr}/README.txt', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-#        expand('PaintedPatches/results/mask_assess/{itr}/no_imputed.vcf.gz', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-#        expand('PaintedPatches/results/mask_assess/{itr}/no_imputed.vcf.gz.tbi', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-#        expand('PaintedPatches/results/mask_assess/{itr}/full.vcf.gz', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-#        expand('PaintedPatches/results/mask_assess/{itr}/full.vcf.gz.tbi', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-#        expand('PaintedPatches/results/mask_assess/{itr}/plink.imiss', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-#        expand('PaintedPatches/results/mask_assess/{itr}/plink.lmiss', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-#        expand('PaintedPatches/results/mask_assess/{itr}/plink.nosex', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
-#        expand('PaintedPatches/results/mask_assess/{itr}/plink.log', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
+       expand('0.3_masking_results/split/original/chr{chrom}/chr{chrom}.vcf.gz', chrom=chroms),
+       expand('0.3_masking_results/split/original/chr{chrom}/chr{chrom}.vcf.gz.tbi', chrom=chroms),
+       expand('0.3_masking_results/split/original/prepped/chr{chrom}/chr{chrom}.no_missing.vcf.gz', chrom=chroms),
+       expand('0.3_masking_results/split/original/prepped/chr{chrom}/chr{chrom}.no_missing.vcf.gz.tbi', chrom=chroms),
+       expand('0.3_masking_results/split/original/prepped/chr{chrom}/chr{chrom}.cleaned.vcf.gz', chrom=chroms),
+       expand('0.3_masking_results/split/original/prepped/chr{chrom}/chr{chrom}.cleaned.vcf.gz.tbi', chrom=chroms),
+       expand('0.3_masking_results/masking/maf_bins/chr{chrom}/{bin}/full/output.vcf.gz',chrom=chroms, bin=bins),
+       expand('0.3_masking_results/masking/maf_bins/chr{chrom}/{bin}/full/output.vcf.gz', chrom=chroms, bin=bins),
+       expand('0.3_masking_results/masking/maf_bins/{itr}/chr{chrom}/{bin}/to_mask/output.vcf.gz', chrom=chroms, bin=bins, itr=itrs),
+       expand('0.3_masking_results/masking/maf_bins/{itr}/chr{chrom}/{bin}/masked/output.vcf.gz', chrom=chroms, bin=bins, itr=itrs),
+       expand('0.3_masking_results/masking/maf_bins/{itr}/chr{chrom}/{bin}/combine/isec/0000.vcf', chrom=chroms, bin=bins, itr=itrs),
+       expand('0.3_masking_results/masking/maf_bins/{itr}/chr{chrom}/vcf_list.txt', chrom=chroms, itr=itrs),
+       expand('0.3_masking_results/masking/maf_bins/{itr}/chr{chrom}/combine/combined.vcf.gz', chrom=chroms, bin=bins, itr=itrs),
+
+#        '0.3_masking_results/split/original/prepped/merged.cleaned.vcf.gz',
+#        '0.3_masking_results/split/original/prepped/merged.cleaned.vcf.gz.tbi',
+        expand('0.3_masking_results/split/ref/chr{chrom}/chr{chrom}.vcf.gz', chrom=chroms),
+        expand('0.3_masking_results/split/ref/chr{chrom}/chr{chrom}.vcf.gz.tbi', chrom=chroms),
+        expand('0.3_masking_results/imputed/{itr}/chr{chrom}/imputed.chr{chrom}.vcf.gz', chrom=chroms, itr=itrs),
+        expand('0.3_masking_results/imputed/{itr}/chr{chrom}/imputed.chr{chrom}.vcf.gz.tbi', chrom=chroms, itr=itrs),
+        expand('0.3_masking_results/imputed/{itr}/chr{chrom}/imputed.chr{chrom}.MAF.vcf.gz', chrom=chroms, itr=itrs),
+#        expand('0.3_masking_results/FINAL/masked_{itr}/imputed.vcf.gz', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
+#        expand('0.3_masking_results/FINAL/masked_{itr}/imputed.vcf.gz.tbi', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]),
+#        expand('0.3_masking_results/mask_assess/{itr}/chr{chrom}/imputed.table', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)], chrom=[str(i) for i in range(1,31)]),
+#        expand('0.3_masking_results/mask_assess/{itr}/chr{chrom}/original.table', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)], chrom=[str(i) for i in range(1,31)]),
+#        expand('0.3_masking_results/mask_assess/{itr}/chr{chrom}/masked.table', itr=['set' + str(i) for i in range(1, config['iterations'] + 1)], chrom=[str(i) for i in range(1,31)]),
+#        expand('0.3_masking_results/mask_assess/{itr}/mismatched_genos.txt', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
+#        expand('0.3_masking_results/mask_assess/{itr}/remove_imputed.list', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
+#        expand('0.3_masking_results/mask_assess/{itr}/README.txt', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
+#        expand('0.3_masking_results/mask_assess/{itr}/no_imputed.vcf.gz', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
+#        expand('0.3_masking_results/mask_assess/{itr}/no_imputed.vcf.gz.tbi', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
+#        expand('0.3_masking_results/mask_assess/{itr}/full.vcf.gz', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
+#        expand('0.3_masking_results/mask_assess/{itr}/full.vcf.gz.tbi', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
+#        expand('0.3_masking_results/mask_assess/{itr}/plink.imiss', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
+#        expand('0.3_masking_results/mask_assess/{itr}/plink.lmiss', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
+#        expand('0.3_masking_results/mask_assess/{itr}/plink.nosex', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
+#        expand('0.3_masking_results/mask_assess/{itr}/plink.log', itr=[f'set{i}' for i in range(1, config['iterations'] + 1)]),
+
+rule split_original:
+    input:
+        original_vcf = config['original_vcf'],
+        original_vcf_tbi = config['original_vcf_tbi'],
+    output:
+        original_vcf_split = '0.3_masking_results/split/original/chr{chrom}/chr{chrom}.vcf.gz',
+        original_vcf_split_tbi = '0.3_masking_results/split/original/chr{chrom}/chr{chrom}.vcf.gz.tbi',
+    resources:
+        time    = 30,
+        mem_mb  = 24000,
+        cpus    = 4,
+    shell:
+            '''
+                bcftools view \
+                    -r chr{wildcards.chrom} \
+                    -Oz -o {output.original_vcf_split} \
+                    {input.original_vcf}
+
+                gatk IndexFeatureFile -I {output.original_vcf_split}
+            '''
+
+rule prep_original:
+    input:
+        original_vcf_split = '0.3_masking_results/split/original/chr{chrom}/chr{chrom}.vcf.gz',
+        original_vcf_split_tbi = '0.3_masking_results/split/original/chr{chrom}/chr{chrom}.vcf.gz.tbi'
+    output:
+        original_vcf_prepped = '0.3_masking_results/split/original/prepped/chr{chrom}/chr{chrom}.no_missing.vcf.gz',
+        original_vcf_prepped_tbi = '0.3_masking_results/split/original/prepped/chr{chrom}/chr{chrom}.no_missing.vcf.gz.tbi',
+        original_vcf_cleaned = '0.3_masking_results/split/original/prepped/chr{chrom}/chr{chrom}.cleaned.vcf.gz',
+        original_vcf_cleaned_tbi = '0.3_masking_results/split/original/prepped/chr{chrom}/chr{chrom}.cleaned.vcf.gz.tbi',
+    resources:
+        time = 180,
+        mem_mb = 24000,
+        cpus = 4
+    params:
+        directory = '0.3_masking_results/split/original/prepped'
+    shell:
+        r'''
+        
+            set -euo pipefail
+
+            echo "Starting bcftools view -f PASS"
+            bcftools view -f PASS {input.original_vcf_split} -Oz -o {params.directory}/chr{wildcards.chrom}/chr{wildcards.chrom}.temp.vcf.gz
+            echo "Finished bcftools view -f PASS"
+
+            echo "Starting bcftools norm"
+            bcftools norm -m -both {params.directory}/chr{wildcards.chrom}/chr{wildcards.chrom}.temp.vcf.gz -Oz -o {params.directory}/chr{wildcards.chrom}/chr{wildcards.chrom}.temp2.vcf.gz
+            echo "Finished bcftools norm"
+
+            echo "Starting bcftools +fill-tags"
+            bcftools +fill-tags 0.3_masking_results/split/original/prepped/chr{wildcards.chrom}/chr{wildcards.chrom}.temp2.vcf.gz -- -t MAF | bcftools view -Oz -o {params.directory}/chr{wildcards.chrom}/chr{wildcards.chrom}.temp3.vcf.gz
+            echo "Finished bcftools +fill-tags"
+
+            echo "Starting bcftools annotate"
+            bcftools annotate --set-id +'%CHROM\_%POS\_%REF\_%FIRST_ALT' {params.directory}/chr{wildcards.chrom}/chr{wildcards.chrom}.temp3.vcf.gz -o {params.directory}/chr{wildcards.chrom}/chr{wildcards.chrom}.cleaned.vcf.gz
+            echo "Finished bcftools annotate"
+
+            echo "Starting GATK IndexFeatureFile for cleaned VCF"
+            gatk IndexFeatureFile -I {params.directory}/chr{wildcards.chrom}/chr{wildcards.chrom}.cleaned.vcf.gz
+            echo "Finished GATK IndexFeatureFile for cleaned VCF"
+
+            echo "Starting bcftools view -g ^miss"
+            bcftools view -g ^miss {params.directory}/chr{wildcards.chrom}/chr{wildcards.chrom}.cleaned.vcf.gz -o {output.original_vcf_prepped}
+            echo "Finished bcftools view -g ^miss"
+
+            #echo "Starting bcftools view -i 'MAF>=0.01'"
+            #bcftools view -i 'MAF>=0.01' {params.directory}/chr{wildcards.chrom}/chr{wildcards.chrom}.temp4.vcf.gz -Oz -o {output.original_vcf_prepped}
+            #echo "Finished bcftools view -i 'MAF>=0.01'"
+
+            echo "Starting GATK IndexFeatureFile for prepped VCF"
+            gatk IndexFeatureFile -I {output.original_vcf_prepped}
+            echo "Finished GATK IndexFeatureFile for prepped VCF"
+
+            echo "Cleaning up temporary files"
+            rm -f {params.directory}/chr{wildcards.chrom}/chr{wildcards.chrom}.temp.vcf.gz
+            rm -f {params.directory}/chr{wildcards.chrom}/chr{wildcards.chrom}.temp2.vcf.gz
+            rm -f {params.directory}/chr{wildcards.chrom}/chr{wildcards.chrom}.temp3.vcf.gz
+            #rm -f {params.directory}/chr{wildcards.chrom}/chr{wildcards.chrom}.temp4.vcf.gz
+            echo "Cleanup complete"
+
+        '''
+
+rule filter_maf_bins:
+    input:
+        original_vcf_prepped = '0.3_masking_results/split/original/prepped/chr{chrom}/chr{chrom}.no_missing.vcf.gz',
+    output:
+        maf_bin_vcf = '0.3_masking_results/masking/maf_bins/chr{chrom}/{bin}/full/output.vcf.gz',  
+    params:
+        maf_min = lambda wildcards: bins_list[wildcards.bin][0],
+        maf_max = lambda wildcards: bins_list[wildcards.bin][1]
+    shell:
+        '''
+        
+            bcftools view -i 'MAF>={params.maf_min} & MAF<{params.maf_max}' {input.original_vcf_prepped} -Oz -o {output.maf_bin_vcf}
+
+            tabix {output.maf_bin_vcf}
+        
+        '''
+
+
+rule isolate_random_variants:
+    input:
+        maf_bin_vcf = '0.3_masking_results/masking/maf_bins/chr{chrom}/{bin}/full/output.vcf.gz',
+    output:
+        random_selection_vcf = '0.3_masking_results/masking/maf_bins/{itr}/chr{chrom}/{bin}/to_mask/output.vcf.gz',
+    params:
+        directory = '0.3_masking_results/masking/maf_bins/{itr}/chr{chrom}/{bin}/to_mask',
+    resources:
+        time    = 30,
+        mem_mb  = 24000,
+        cpus    = 4,
+    shell:
+        '''
+        
+            set -euo pipefail
+
+            echo "Counting total variants"
+            total_variants=$(bcftools view -H {input.maf_bin_vcf} | wc -l)
+            echo "Total variants: $total_variants"
+
+            echo "Calculating 30% of total variants"
+            thirty_percent=$(echo "($total_variants * 0.3)/1" | bc)
+            echo "30% of total variants: $thirty_percent"
+
+            # Extract the header
+            echo "Extracting header"
+            bcftools view -h {input.maf_bin_vcf} > {params.directory}/temp_header.vcf
+            echo "Header extracted"
+
+            # Extract 30% of variants and sort them
+            echo "Extracting and sorting 30% of variants"
+            bcftools view -H {input.maf_bin_vcf} | shuf -n $thirty_percent | sort -k1,1 -k2,2n > {params.directory}/temp_variants.vcf
+            echo "10% of variants extracted and sorted"
+
+            # Combine header and sorted variants, and compress the result
+            echo "Combining header and sorted variants"
+            cat {params.directory}/temp_header.vcf {params.directory}/temp_variants.vcf | bgzip -c > {output.random_selection_vcf}
+            echo "Combined and compressed"
+
+            # Index the resulting VCF
+            echo "Indexing the resulting VCF"
+            bcftools index {output.random_selection_vcf}
+            echo "Indexing complete"
+
+            # Clean up temporary files
+            echo "Cleaning up temporary files"
+            rm {params.directory}/temp_header.vcf {params.directory}/temp_variants.vcf
+            echo "Cleanup complete"
+        
+        '''
+
+#rule get_clean_list:
+#    input:
+#        original_vcf_cleaned = expand('0.3_masking_results/split/original/prepped/chr{chrom}.cleaned.vcf.gz', chrom=chroms),
+#    output:
+#        cleaned_vcf_list = '0.3_masking_results/split/original/prepped/cleaned_vcf_list.txt',
+#    resources:
+#        time = 20,
+#        mem_mb = 24000,
+#    run:
+#        outfile = open('0.3_masking_results/split/original/prepped/cleaned_vcf_list.txt', 'wt')
+#
+#        for num in range(1,32):
+#            print('0.3_masking_results/split/original/prepped/chr' + str(num) + '.cleaned.vcf.gz', file=outfile) 
+#
+#rule concat_cleaned:
+#    input:
+#        cleaned_vcf_list = '0.3_masking_results/split/original/prepped/cleaned_vcf_list.txt',
+#    output:
+#        merged_cleaned_vcf = '0.3_masking_results/split/original/prepped/merged.cleaned.vcf.gz',
+#        merged_cleaned_vcf_tbi = '0.3_masking_results/split/original/prepped/merged.cleaned.vcf.gz.tbi',
+#    resources:
+#        time = 60,
+#        mem_mb = 24000,
+#    shell:
+#       '''
+#            gatk MergeVcfs -I {input.cleaned_vcf_list} -O {output.merged_cleaned_vcf}
+#
+#            gatk IndexFeatureFile -I {output.merged_cleaned_vcf}
+#        '''
 
 rule mask:
     input:
-        vcf_to_mask = config['vcf_to_mask'],
-        vcf_to_mask_tbi = config['vcf_to_mask_tbi'],
+        random_selection_vcf = '0.3_masking_results/masking/maf_bins/{itr}/chr{chrom}/{bin}/to_mask/output.vcf.gz',
     output:
-        masked_vcf = 'PaintedPatches/results/masked_vcfs/{itr}/masked_{itr}.vcf.gz',
-        masked_tbi = 'PaintedPatches/results/masked_vcfs/{itr}/masked_{itr}.vcf.gz.tbi',
-    threads: 4
+        masked_vcf = '0.3_masking_results/masking/maf_bins/{itr}/chr{chrom}/{bin}/masked/output.vcf.gz',
+        masked_tbi = '0.3_masking_results/masking/maf_bins/{itr}/chr{chrom}/{bin}/masked/output.vcf.gz.tbi',
+        #masked_vcf = '0.3_masking_results/masking/{itr}/chr{chrom}/masked.bin.{bin}.vcf.gz',
+        #masked_tbi = '0.3_masking_results/masking/{itr}/chr{chrom}/masked.bin.{bin}.vcf.gz.tbi',
     resources:
         time    = 30,
         mem_mb  = 24000,
@@ -49,394 +278,441 @@ rule mask:
         bcftools_directory = config['bcftools_directory']
     shell:
             '''
-                {params.bcftools_directory} +setGT -o {output.masked_vcf} {input.vcf_to_mask} -- -t r:{params.mask_proportion} -s {params.seed} -n .
+                {params.bcftools_directory} +setGT -o {output.masked_vcf} {input.random_selection_vcf} -- -t r:{params.mask_proportion} -s {params.seed} -n . 
                 
                 gatk IndexFeatureFile -I {output.masked_vcf}
 
             '''
 
+rule isec:
+    input:
+        maf_bin_vcf = '0.3_masking_results/masking/maf_bins/chr{chrom}/{bin}/full/output.vcf.gz',
+        masked_vcf = '0.3_masking_results/masking/maf_bins/{itr}/chr{chrom}/{bin}/masked/output.vcf.gz',
+    output:
+        isec_vcfs = '0.3_masking_results/masking/maf_bins/{itr}/chr{chrom}/{bin}/combine/isec/0000.vcf',
+    resources:
+        time = 60,
+        mem_mb = 24000,
+    params:
+        directory = '0.3_masking_results/masking/maf_bins/{itr}/chr{chrom}/{bin}/combine/isec/'
+    shell:
+       '''
+            bcftools isec -p {params.directory} {input.maf_bin_vcf} {input.masked_vcf}
+        '''
+
+rule masked_list:
+    input:
+        isec_vcfs = expand('0.3_masking_results/masking/maf_bins/{itr}/chr{chrom}/{bin}/combine/isec/0000.vcf', chrom=chroms, bin=bins, itr=itrs),
+    output:
+        vcf_list = '0.3_masking_results/masking/maf_bins/{itr}/chr{chrom}/vcf_list.txt',
+    resources:
+        time = 60,
+        mem_mb = 24000,
+    run: 
+        # Define the output file
+        output_file = Path(output.vcf_list)
+
+        # Create a list to hold the VCF paths
+        vcf_paths = []
+
+        # Loop through each bin and VCF file pattern
+        for bin in bins:
+            for vcf in ["0000.vcf", "0003.vcf"]:
+                # Construct the VCF path using Pathlib
+                vcf_path = "0.3_masking_results/masking/maf_bins/" + wildcards.itr + "/chr" + wildcards.chrom + "/" + bin + "/combine/isec/" + vcf
+                vcf_paths.append(vcf_path)
+
+        # Write the VCF paths to the output file
+        with output_file.open("w") as f:
+            for path in vcf_paths:
+                f.write(path + "\n")
+
+rule combine_masked:
+    input:
+        vcf_list = '0.3_masking_results/masking/maf_bins/{itr}/chr{chrom}/vcf_list.txt',
+    output:
+        combined_masked_vcf = '0.3_masking_results/masking/maf_bins/{itr}/chr{chrom}/combine/combined.vcf.gz',
+    resources:
+        time = 60,
+        mem_mb = 24000,
+    shell:
+            '''
+                java -jar /panfs/jay/groups/27/mccuem/dimml002/picard.jar MergeVcfs \
+                    -I {input.vcf_list} \
+                    -O {output.combined_masked_vcf}
+
+                gatk IndexFeatureFile -I {output.combined_masked_vcf}
+            '''
+
 rule split_phased:
     input:
-        reference_panel = config['reference_panel'],
-        reference_panel_tbi = config['reference_panel_tbi'] 
+        reference_vcf = config['reference_panel'],
+        reference_vcf_tbi = config['reference_panel_tbi'] 
     output:
-        split_vcf = 'PaintedPatches/results/ref/split/chr{chrom}/chr{chrom}.vcf.gz',
-        split_tbi = 'PaintedPatches/results/ref/split/chr{chrom}/chr{chrom}.vcf.gz.tbi'
-    threads: 4
+        reference_vcf_split = '0.3_masking_results/split/ref/chr{chrom}/chr{chrom}.vcf.gz',
+        reference_vcf_split_tbi = '0.3_masking_results/split/ref/chr{chrom}/chr{chrom}.vcf.gz.tbi'
     resources:
-        time    = 1440,
+        time    = 360,
         mem_mb  = 60000,
         cpus    = 4
     shell:
             '''
                 bcftools view \
                 -r chr{wildcards.chrom} \
-                -Oz -o {output.split_vcf} \
-                {input.reference_panel}
+                -Oz -o {output.reference_vcf_split} \
+                {input.reference_vcf}
 
-                gatk IndexFeatureFile -I {output.split_vcf}
+                gatk IndexFeatureFile -I {output.reference_vcf_split}
             '''
-
-rule split_masked:
-   input:
-       masked_vcf = 'PaintedPatches/results/masked_vcfs/{itr}/masked_{itr}.vcf.gz',
-       masked_tbi = 'PaintedPatches/results/masked_vcfs/{itr}/masked_{itr}.vcf.gz.tbi',
-   output:
-       split_vcf = 'PaintedPatches/results/split/masked_vcfs/{itr}/chr{chrom}/masked.chr{chrom}.vcf.gz',
-       split_tbi = 'PaintedPatches/results/split/masked_vcfs/{itr}/chr{chrom}/masked.chr{chrom}.vcf.gz.tbi',
-   threads: 4
-   resources:
-       time    = 1440,
-       mem_mb  = 60000,
-       cpus    = 4
-   shell:
-       '''
-           bcftools view \
-           -r chr{wildcards.chrom} \
-           -Oz -o {output.split_vcf} \
-           {input.masked_vcf}
-
-           tabix -p vcf {output.split_vcf}
-       '''
 
 rule beagle40_impute:
     input:
-        sample_vcf = 'PaintedPatches/results/split/masked_vcfs/{itr}/chr{chrom}/masked.chr{chrom}.vcf.gz', 
-        sample_tbi = 'PaintedPatches/results/split/masked_vcfs/{itr}/chr{chrom}/masked.chr{chrom}.vcf.gz.tbi', 
-        phased_vcf = 'PaintedPatches/results/ref/split/chr{chrom}/chr{chrom}.vcf.gz', 
-        phased_tbi = 'PaintedPatches/results/ref/split/chr{chrom}/chr{chrom}.vcf.gz.tbi',
+        combined_masked_vcf = '0.3_masking_results/masking/maf_bins/{itr}/chr{chrom}/combine/combined.vcf.gz', 
+        reference_vcf = '0.3_masking_results/split/ref/chr{chrom}/chr{chrom}.vcf.gz', 
+        reference_vcf_tbi = '0.3_masking_results/split/ref/chr{chrom}/chr{chrom}.vcf.gz.tbi',
     output:
-        imputed_vcf = 'PaintedPatches/results/imputed/masked_{itr}/chr{chrom}/imputed.chr{chrom}.vcf.gz',
-        imputed_tbi = 'PaintedPatches/results/imputed/masked_{itr}/chr{chrom}/imputed.chr{chrom}.vcf.gz.tbi'
+        imputed_vcf = '0.3_masking_results/imputed/{itr}/chr{chrom}/imputed.chr{chrom}.vcf.gz',
+        imputed_tbi = '0.3_masking_results/imputed/{itr}/chr{chrom}/imputed.chr{chrom}.vcf.gz.tbi'
     params:
         prefix = lambda wildcards, output: output.imputed_vcf.rsplit('.',2)[0],
         breed = config['breed'],
         breed_ab = config['breed_ab'],
     threads: 24
     resources:
-        time    = 360,
+        time    = 1440,
         mem_mb  = 60000,
         cpus    = 4
     shell:
         '''
             java -jar beagle.27Jan18.7e1.jar \
-            gtgl={input.sample_vcf} \
+            gtgl={input.combined_masked_vcf} \
             chrom=chr{wildcards.chrom} \
-            map=~/NuGEN/Imputation/reference_panel/beagle_54_all_breeds/recombination_maps/beagle_maps/BEAGLE_{params.breed}_ECA{wildcards.chrom}_map.txt \
-            ref={input.phased_vcf} \
-			window=5000000 \
-			overlap=20000 \
-			ne=100 \
-			err=0.05 \
-			gprobs=true \
-            nthreads={threads} \
+            map=recombination_maps/{params.breed}/beagle_maps/BEAGLE_{params.breed_ab}_ECA{wildcards.chrom}_map.txt \
+            ref={input.reference_vcf} \
+            ne=8460 \
+            gprobs=true \
             impute=true \
             out={params.prefix}
 
             gatk IndexFeatureFile -I {output.imputed_vcf} 
         '''
 
-rule imputed_list:
+rule add_MAF:
     input:
-        imputed_vcfs = sorted(expand(
-        'PaintedPatches/results/imputed/masked_{itr}/{chrom}/imputed.{chrom}.vcf.{ext}',
-        chrom=['chr' + str(i) for i in range(1,31)] + ['chrX'], # NO CHROM M CORRECT?
-        ext=['gz','gz.tbi'],
-        itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]
-        ))
+        imputed_vcf = '0.3_masking_results/imputed/{itr}/chr{chrom}/imputed.chr{chrom}.vcf.gz',
     output:
-        sorted_list = 'PaintedPatches/results/imputed/masked_{itr}/imputed.list',
-    threads: 1
+        imputed_vcf_maf = '0.3_masking_results/imputed/{itr}/chr{chrom}/imputed.chr{chrom}.MAF.vcf.gz',
+        imputed_tbi_maf = '0.3_masking_results/imputed/{itr}/chr{chrom}/imputed.chr{chrom}.MAF.vcf.gz.tbi',
     resources:
-        time   = 20,
-        mem_mb = 4000
-    run:
-        # drop indices from input
-        for itr in range(1, config['iterations'] + 1):
-            outfile = open('PaintedPatches/results/imputed/masked_set' + str(itr) + '/imputed.list', 'wt')
-            for chrom in range(1,32):
-                print('PaintedPatches/results/imputed/masked_set' + str(itr) + '/chr' + str(chrom) + '/imputed.chr' + str(chrom) + '.vcf.gz',
-                    file = outfile)
-
-rule combine_imputed:
-    input:
-        sorted_list = 'PaintedPatches/results/imputed/masked_{itr}/imputed.list', 
-        imputed_vcfs = sorted(expand(
-        'PaintedPatches/results/imputed/masked_{itr}/{chrom}/imputed.{chrom}.vcf.{ext}', 
-        chrom=['chr' + str(i) for i in range(1,31)] + ['chrX'], # NO CHROM M CORRECT?
-        ext=['gz','gz.tbi'],
-        itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]
-        ))
-    output:
-        sorted_vcf = 'PaintedPatches/results/FINAL/masked_{itr}/imputed.vcf.gz',
-        sorted_tbi = 'PaintedPatches/results/FINAL/masked_{itr}/imputed.vcf.gz.tbi' 
-    threads: 4
-    resources:
-        time   = 720,
-        mem_mb = 24000
+        time    = 20,
+        mem_mb  = 12000,
     shell:
-        '''
-            bcftools concat \
-            -Oz -o {output.sorted_vcf} \
-            -f {input.sorted_list}
+            '''
+                bcftools +fill-tags {input.imputed_vcf} -Oz -o {output.imputed_vcf_maf} -- -t MAF
 
-            gatk IndexFeatureFile -I {output.sorted_vcf}
-        '''
+                gatk IndexFeatureFile -I {output.imputed_vcf_maf}
+            '''
+#rule imputed_list:
+#    input:
+#        imputed_vcfs = sorted(expand(
+#        '0.3_masking_results/imputed/masked_{itr}/{chrom}/imputed.{chrom}.vcf.{ext}',
+#        chrom=['chr' + str(i) for i in range(1,31)], # NO CHROM M CORRECT?
+#        ext=['gz','gz.tbi'],
+#        itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]
+#        ))
+#    output:
+#        sorted_list = '0.3_masking_results/imputed/masked_{itr}/imputed.list',
+#    threads: 1
+#    resources:
+#        time   = 20,
+#        mem_mb = 4000
+#    run:
+#        # drop indices from input
+#        for itr in range(1, config['iterations'] + 1):
+#            outfile = open('0.3_masking_results/imputed/masked_set' + str(itr) + '/imputed.list', 'wt')
+#            for chrom in range(1,32):
+#                print('0.3_masking_results/imputed/masked_set' + str(itr) + '/chr' + str(chrom) + '/imputed.chr' + str(chrom) + '.vcf.gz',
+#                    file = outfile)
+#
+#rule combine_imputed:
+#    input:
+#        sorted_list = '0.3_masking_results/imputed/masked_{itr}/imputed.list', 
+#        imputed_vcfs = sorted(expand(
+#        '0.3_masking_results/imputed/masked_{itr}/{chrom}/imputed.{chrom}.vcf.{ext}', 
+#        chrom=['chr' + str(i) for i in range(1,31)], # NO CHROM M CORRECT?
+#        ext=['gz','gz.tbi'],
+#        itr=['set' + str(i) for i in range(1, config['iterations'] + 1)]
+#        ))
+#    output:
+#        sorted_vcf = '0.3_masking_results/FINAL/masked_{itr}/imputed.vcf.gz',
+#        sorted_tbi = '0.3_masking_results/FINAL/masked_{itr}/imputed.vcf.gz.tbi' 
+#    threads: 4
+#    resources:
+#        time   = 720,
+#        mem_mb = 24000
+#    shell:
+#        '''
+#            bcftools concat \
+#            -Oz -o {output.sorted_vcf} \
+#            -f {input.sorted_list}
+#
+#            gatk IndexFeatureFile -I {output.sorted_vcf}
+#        '''
 
-rule to_table:
-    input:
-        masked_vcf = 'PaintedPatches/results/masked_vcfs/{itr}/masked_{itr}.vcf.gz',
-        original_vcf = config['vcf_to_mask'],
-        imputed_vcf = 'PaintedPatches/results/FINAL/masked_{itr}/imputed.vcf.gz',
-    output:
-        imputed_table = 'PaintedPatches/results/mask_assess/{itr}/imputed.table',
-        original_table = 'PaintedPatches/results/mask_assess/{itr}/original.table',
-        masked_table = 'PaintedPatches/results/mask_assess/{itr}/masked.table',
-    threads: 4
-    resources:
-        time   = 30,
-        mem_mb = 24000
-    shell:
-        '''
-             bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%AF\t%DR2\t%QUAL\t%FILTER\t[%DS\t]\n' -H {input.imputed_vcf}  > {output.imputed_table}
+#rule to_table:
+#    input:
+#        masked_vcf = '0.3_masking_results/masked_vcfs/{itr}/chr{chrom}/masked.vcf.gz', 
+#        original_vcf = '0.3_masking_results/split/original/chr{chrom}.vcf.gz',
+#        imputed_vcf = '0.3_masking_results/imputed/masked_{itr}/chr{chrom}/imputed.chr{chrom}.vcf.gz',
+#    output:
+#        imputed_table = '0.3_masking_results/mask_assess/{itr}/chr{chrom}/imputed.table',
+#        original_table = '0.3_masking_results/mask_assess/{itr}/chr{chrom}/original.table',
+#        masked_table = '0.3_masking_results/mask_assess/{itr}/chr{chrom}/masked.table',
+#    threads: 4
+#    resources:
+#        time   = 30,
+#        mem_mb = 24000
+#    shell:
+#        '''
+#             bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%MAF\t%AC\t%QUAL\t%FILTER\t[%DS\t]\n' -H {input.imputed_vcf}  > {output.imputed_table}
+#
+#             bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%MAF\t%AC\t%QUAL\t%FILTER\t[%GT\t]\n' -H {input.original_vcf}  > {output.original_table}
+#
+#             bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%MAF\t%AC\t%QUAL\t%FILTER\t[%GT\t]\n' -H {input.masked_vcf}  > {output.masked_table}
+#    
+#        '''
 
-             bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%AF\t%AC\t%QUAL\t%FILTER\t[%GT\t]\n' -H {input.original_vcf}  > {output.original_table}
-
-             bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%AF\t%AC\t%QUAL\t%FILTER\t[%GT\t]\n' -H {input.masked_vcf}  > {output.masked_table}
-    
-        '''
-
-rule compare_genos:
-    input:
-        imputed_table = 'PaintedPatches/results/mask_assess/{itr}/imputed.table',
-        original_table = 'PaintedPatches/results/mask_assess/{itr}/original.table',
-        masked_table = 'PaintedPatches/results/mask_assess/{itr}/masked.table',
-    output:
-        mismatched_genos = 'PaintedPatches/results/mask_assess/{itr}/mismatched_genos.txt',
-        remove_imputed = 'PaintedPatches/results/mask_assess/{itr}/remove_imputed.list',
-        readme = 'PaintedPatches/results/mask_assess/{itr}/README.txt',
-    threads: 4
-    resources:
-        time   = 30,
-        mem_mb = 24000
-    run:
-        infile1 = open(input.original_table, 'rt')
-        infile2 = open(input.masked_table, 'rt')
-        infile3 = open(input.imputed_table, 'rt')
-
-        outfile1 = open(output.mismatched_genos, 'wt')
-        outfile2 = open(output.remove_imputed, 'wt')
-        outfile3 = open(output.readme, 'wt')
-
-        #Dictionary to keep track of 
-        org = {}
-
-        total_genos = 0
-
-        line = infile1.readline()
-        samples_temp = line.split('\t')
-        samples = []
-
-        for sample in samples_temp:
-            if '.' in sample:
-                sample = sample.replace('.GT', '')
-                samples.append(sample)
-
-        sample_num = len(samples)
-        ind = sample_num + 1
-
-        total_variants = 0
-        for line in infile1:
-            line = line.rstrip()
-            total_variants += 1
-            split = line.split('\t')
-            pos = split[0] + ':' + str(split[1])
-            org[pos] = {}
-            for i in range(3,ind):
-                sample_ind = i - 3
-                geno = split[i].replace('|', '/')
-                al1,al2 = geno.split('/')
-                alleles = []
-                alleles.append(al1)
-                alleles.append(al2)
-                alleles.sort()
-                geno = alleles[0] + '/' + alleles[1]
-                org[pos][samples[sample_ind]] = geno
-                total_genos += 1
-
-        masked = {}
-
-        line = infile2.readline()
-
-        samples_temp = line.split('\t')
-        samples = []
-
-        for sample in samples_temp:
-            if '.' in sample:
-                sample = sample.replace('.GT', '')
-                samples.append(sample)
-
-        masked_genos = 0
-
-        for line in infile2:
-            line = line.rstrip()
-            split = line.split('\t')
-            pos = split[0] + ':' + str(split[1])
-            if './.' in line:
-                masked[pos] = {}
-                for i in range(3,ind):
-                    sample_ind = i - 3
-                    if split[i] == './.':
-                        split[i] = split[i].replace('|', '/')
-                        masked[pos][samples[sample_ind]] = split[i]
-                        masked_genos += 1
-
-        imputed = {}
-
-        line = infile3.readline()
-        samples_temp = line.split('\t')
-        samples = []
-
-        for sample in samples_temp:
-            if '.' in sample:
-                sample = sample.replace('.GT', '')
-                samples.append(sample)
-
-        imputed_genos = 0
-
-        for line in infile3:
-            line = line.rstrip()
-            split = line.split('\t')
-            pos = split[0] + ':' + str(split[1])
-            imputed[pos] = {}
-            for i in range(3,ind):
-                sample_ind = i - 3
-                geno = split[i].replace('|', '/')
-                al1,al2 = geno.split('/')
-                alleles = []
-                alleles.append(al1)
-                alleles.append(al2)
-                alleles.sort()
-                geno = alleles[0] + '/' + alleles[1]
-                imputed[pos][samples[sample_ind]] = geno
-                imputed_genos += 1
-
-        correct_snps = 0
-        incorrect_snps = 0
-        correct_indels = 0
-        incorrect_indels = 0
-        missing_variants = 0
-
-        for variant,value in imputed.items():
-            for sample,geno in value.items():
-                if variant in org:
-                    if org[variant][sample] == geno:
-                        if len(geno) > 3:
-                            correct_indels += 1
-                        else:
-                            correct_snps += 1
-                    else:
-                        if len(geno) > 3:
-                            incorrect_indels += 1
-                        else:
-                            incorrect_snps += 1
-                        print(variant, sample + ':' + org[variant][sample], sample + ':' + imputed[variant][sample],
-                                sep='\t',
-                                file=outfile1)
-                else:
-                    missing_variants += 1
-
-            for variant,value in org.items():
-                if variant in imputed:
-                    chrom,pos = variant.split(':')
-                    print(chrom + '\t' + pos, file=outfile2)
-
-
-        missing_genos = total_genos - imputed_genos
-
-        print('Total variants: ' + str(total_variants), file=outfile3)
-        print('Total genotypes: ' + str(total_genos), file=outfile3)
-        print('Masked genotypes: ' + str(masked_genos), file=outfile3)
-        print('Imputed genotypes: ' + str(imputed_genos), file=outfile3)
-        #print('Correctly imputed genotypes: ' + str(correct), file=outfile3)
-        #print('Incorrectly imputed genotypes: ' + str(incorrect), file=outfile3)
-        print('Missing variants: ' + str(missing_variants), file=outfile3)
-        print('Missing genotype: ' + str(missing_genos) + '\n', file=outfile3)
-
-        print('Percent Imputed: ' + str(imputed_genos/total_genos*100), file=outfile3)
-        print('SNP Accuracy: ' + str(correct_snps/(correct_snps+incorrect_snps)*100), file=outfile3)
-        print('Indel Accuracy: ' + str(correct_indels/(correct_indels+incorrect_indels)*100), file=outfile3)
-
-
-rule remove_imputed:
-    input:
-        original_vcf = config['vcf_to_mask'],
-        remove_imputed = 'PaintedPatches/results/mask_assess/{itr}/remove_imputed.list',
-    output:
-        no_imputed = 'PaintedPatches/results/mask_assess/{itr}/no_imputed.vcf.gz',
-        no_imputed_tbi = 'PaintedPatches/results/mask_assess/{itr}/no_imputed.vcf.gz.tbi',
-    threads: 4
-    resources:
-        time   = 30,
-        mem_mb = 24000
-    shell:
-        '''
-            bcftools view \
-                -Oz \
-                -o {output.no_imputed} \
-                --min-ac 1 \
-                -T {input.remove_imputed} \
-                {input.original_vcf}
-
-            gatk IndexFeatureFile -I {output.no_imputed}
- 
-        '''
-
-rule combine_vcfs:
-    input:
-        no_imputed = 'PaintedPatches/results/mask_assess/{itr}/no_imputed.vcf.gz',
-        imputed_vcf = 'PaintedPatches/results/FINAL/masked_{itr}/imputed.vcf.gz',
-    output:
-        full_vcf = 'PaintedPatches/results/mask_assess/{itr}/full.vcf.gz',
-        full_tbi = 'PaintedPatches/results/mask_assess/{itr}/full.vcf.gz.tbi',
-    threads: 4
-    resources:
-        time   = 30,
-        mem_mb = 24000
-    shell:
-        '''
-            bcftools concat \
-                -Oz \
-                -o {output.full_vcf} \
-                --allow-overlaps \
-                {input.imputed_vcf} {input.no_imputed}
-
-            gatk IndexFeatureFile -I {output.full_vcf}
- 
-        '''
-
-rule plink_missing:
-    input:
-        full_vcf = 'PaintedPatches/results/mask_assess/{itr}/full.vcf.gz', 
-    output:
-        imiss = 'PaintedPatches/results/mask_assess/{itr}/plink.imiss',
-        lmiss = 'PaintedPatches/results/mask_assess/{itr}/plink.lmiss',
-        nosex = 'PaintedPatches/results/mask_assess/{itr}/plink.nosex',
-        logfile = 'PaintedPatches/results/mask_assess/{itr}/plink.log',
-    threads: 4
-    resources:
-        time   = 30,
-        mem_mb = 24000
-    conda:
-        'plink.yaml'
-    params:
-        directory = 'PaintedPatches/results/mask_assess/{itr}/plink'
-    shell:
-        '''
-            plink \
-                --missing \
-                --horse \
-                --vcf {input.full_vcf} \
-                --out {params.directory}
-        '''
-
+#rule compare_genos:
+#    input:
+#        imputed_table = '0.3_masking_results/mask_assess/{itr}/imputed.table',
+#        original_table = '0.3_masking_results/mask_assess/{itr}/original.table',
+#        masked_table = '0.3_masking_results/mask_assess/{itr}/masked.table',
+#    output:
+#        mismatched_genos = '0.3_masking_results/mask_assess/{itr}/mismatched_genos.txt',
+#        remove_imputed = '0.3_masking_results/mask_assess/{itr}/remove_imputed.list',
+#        readme = '0.3_masking_results/mask_assess/{itr}/README.txt',
+#    threads: 4
+#    resources:
+#        time   = 30,
+#        mem_mb = 24000
+#    run:
+#        infile1 = open(input.original_table, 'rt')
+#        infile2 = open(input.masked_table, 'rt')
+#        infile3 = open(input.imputed_table, 'rt')
+#
+#        outfile1 = open(output.mismatched_genos, 'wt')
+#        outfile2 = open(output.remove_imputed, 'wt')
+#        outfile3 = open(output.readme, 'wt')
+#
+#        #Dictionary to keep track of 
+#        org = {}
+#
+#        total_genos = 0
+#
+#        line = infile1.readline()
+#        samples_temp = line.split('\t')
+#        samples = []
+#
+#        for sample in samples_temp:
+#            if '.' in sample:
+#                sample = sample.replace('.GT', '')
+#                samples.append(sample)
+#
+#        sample_num = len(samples)
+#        ind = sample_num + 1
+#
+#        total_variants = 0
+#        for line in infile1:
+#            line = line.rstrip()
+#            total_variants += 1
+#            split = line.split('\t')
+#            pos = split[0] + ':' + str(split[1])
+#            org[pos] = {}
+#            for i in range(3,ind):
+#                sample_ind = i - 3
+#                geno = split[i].replace('|', '/')
+#                al1,al2 = geno.split('/')
+#                alleles = []
+#                alleles.append(al1)
+#                alleles.append(al2)
+#                alleles.sort()
+#                geno = alleles[0] + '/' + alleles[1]
+#                org[pos][samples[sample_ind]] = geno
+#                total_genos += 1
+#
+#        masked = {}
+#
+#        line = infile2.readline()
+#
+#        samples_temp = line.split('\t')
+#        samples = []
+#
+#        for sample in samples_temp:
+#            if '.' in sample:
+#                sample = sample.replace('.GT', '')
+#                samples.append(sample)
+#
+#        masked_genos = 0
+#
+#        for line in infile2:
+#            line = line.rstrip()
+#            split = line.split('\t')
+#            pos = split[0] + ':' + str(split[1])
+#            if './.' in line:
+#                masked[pos] = {}
+#                for i in range(3,ind):
+#                    sample_ind = i - 3
+#                    if split[i] == './.':
+#                        split[i] = split[i].replace('|', '/')
+#                        masked[pos][samples[sample_ind]] = split[i]
+#                        masked_genos += 1
+#
+#        imputed = {}
+#
+#        line = infile3.readline()
+#        samples_temp = line.split('\t')
+#        samples = []
+#
+#        for sample in samples_temp:
+#            if '.' in sample:
+#                sample = sample.replace('.GT', '')
+#                samples.append(sample)
+#
+#        imputed_genos = 0
+#
+#        for line in infile3:
+#            line = line.rstrip()
+#            split = line.split('\t')
+#            pos = split[0] + ':' + str(split[1])
+#            imputed[pos] = {}
+#            for i in range(3,ind):
+#                sample_ind = i - 3
+#                geno = split[i].replace('|', '/')
+#                al1,al2 = geno.split('/')
+#                alleles = []
+#                alleles.append(al1)
+#                alleles.append(al2)
+#                alleles.sort()
+#                geno = alleles[0] + '/' + alleles[1]
+#                imputed[pos][samples[sample_ind]] = geno
+#                imputed_genos += 1
+#
+#        correct_snps = 0
+#        incorrect_snps = 0
+#        correct_indels = 0
+#        incorrect_indels = 0
+#        missing_variants = 0
+#
+#        for variant,value in imputed.items():
+#            for sample,geno in value.items():
+#                if variant in org:
+#                    if org[variant][sample] == geno:
+#                        if len(geno) > 3:
+#                            correct_indels += 1
+#                        else:
+#                            correct_snps += 1
+#                    else:
+#                        if len(geno) > 3:
+#                            incorrect_indels += 1
+#                        else:
+#                            incorrect_snps += 1
+#                        print(variant, sample + ':' + org[variant][sample], sample + ':' + imputed[variant][sample],
+#                                sep='\t',
+#                                file=outfile1)
+#                else:
+#                    missing_variants += 1
+#
+#            for variant,value in org.items():
+#                if variant in imputed:
+#                    chrom,pos = variant.split(':')
+#                    print(chrom + '\t' + pos, file=outfile2)
+#
+#
+#        missing_genos = total_genos - imputed_genos
+#
+#        print('Total variants: ' + str(total_variants), file=outfile3)
+#        print('Total genotypes: ' + str(total_genos), file=outfile3)
+#        print('Masked genotypes: ' + str(masked_genos), file=outfile3)
+#        print('Imputed genotypes: ' + str(imputed_genos), file=outfile3)
+#        #print('Correctly imputed genotypes: ' + str(correct), file=outfile3)
+#        #print('Incorrectly imputed genotypes: ' + str(incorrect), file=outfile3)
+#        print('Missing variants: ' + str(missing_variants), file=outfile3)
+#        print('Missing genotype: ' + str(missing_genos) + '\n', file=outfile3)
+#
+#        print('Percent Imputed: ' + str(imputed_genos/total_genos*100), file=outfile3)
+#        print('SNP Accuracy: ' + str(correct_snps/(correct_snps+incorrect_snps)*100), file=outfile3)
+#        print('Indel Accuracy: ' + str(correct_indels/(correct_indels+incorrect_indels)*100), file=outfile3)
+#
+#
+#rule remove_imputed:
+#    input:
+#        original_vcf = config['vcf_to_mask'],
+#        remove_imputed = '0.3_masking_results/mask_assess/{itr}/remove_imputed.list',
+#    output:
+#        no_imputed = '0.3_masking_results/mask_assess/{itr}/no_imputed.vcf.gz',
+#        no_imputed_tbi = '0.3_masking_results/mask_assess/{itr}/no_imputed.vcf.gz.tbi',
+#    threads: 4
+#    resources:
+#        time   = 30,
+#        mem_mb = 24000
+#    shell:
+#        '''
+#            bcftools view \
+#                -Oz \
+#                -o {output.no_imputed} \
+#                --min-ac 1 \
+#                -T {input.remove_imputed} \
+#                {input.original_vcf}
+#
+#            gatk IndexFeatureFile -I {output.no_imputed}
+# 
+#        '''
+#
+#rule combine_vcfs:
+#    input:
+#        no_imputed = '0.3_masking_results/mask_assess/{itr}/no_imputed.vcf.gz',
+#        imputed_vcf = '0.3_masking_results/FINAL/masked_{itr}/imputed.vcf.gz',
+#    output:
+#        full_vcf = '0.3_masking_results/mask_assess/{itr}/full.vcf.gz',
+#        full_tbi = '0.3_masking_results/mask_assess/{itr}/full.vcf.gz.tbi',
+#    threads: 4
+#    resources:
+#        time   = 30,
+#        mem_mb = 24000
+#    shell:
+#        '''
+#            bcftools concat \
+#                -Oz \
+#                -o {output.full_vcf} \
+#                --allow-overlaps \
+#                {input.imputed_vcf} {input.no_imputed}
+#
+#            gatk IndexFeatureFile -I {output.full_vcf}
+# 
+#        '''
+#
+#rule plink_missing:
+#    input:
+#        full_vcf = '0.3_masking_results/mask_assess/{itr}/full.vcf.gz', 
+#    output:
+#        imiss = '0.3_masking_results/mask_assess/{itr}/plink.imiss',
+#        lmiss = '0.3_masking_results/mask_assess/{itr}/plink.lmiss',
+#        nosex = '0.3_masking_results/mask_assess/{itr}/plink.nosex',
+#        logfile = '0.3_masking_results/mask_assess/{itr}/plink.log',
+#    threads: 4
+#    resources:
+#        time   = 30,
+#        mem_mb = 24000
+#    conda:
+#        'plink.yaml'
+#    params:
+#        directory = '0.3_masking_results/mask_assess/{itr}/plink'
+#    shell:
+#        '''
+#            plink \
+#                --missing \
+#                --horse \
+#                --vcf {input.full_vcf} \
+#                --out {params.directory}
+#        '''
+#
