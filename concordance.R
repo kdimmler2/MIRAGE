@@ -5,7 +5,7 @@ library(tidyr)
 library(purrr)
 library(patchwork)
 
-setwd("/scratch.global/dimml002/PaintedPatches")
+setwd("/scratch.global/dimml002/MIRAGE")
 
 ######################################################################################
 #   Reading and cleaning the data set1   #############################################

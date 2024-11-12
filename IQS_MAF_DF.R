@@ -1,4 +1,4 @@
-setwd('/scratch.global/dimml002/PaintedPatches/results')
+setwd('/scratch.global/dimml002/MIRAGE/results')
 
 library(dplyr)
 library(ggplot2)

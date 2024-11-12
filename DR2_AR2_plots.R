@@ -3,7 +3,7 @@ library(tidyr)
 library(ggplot2)
 library(ggbreak)
 
-setwd('/scratch.global/dimml002/PaintedPatches/results')
+setwd('/scratch.global/dimml002/MIRAGE/results')
 
 df_0.05 <- read.table('combined_DR2_0.05.tsv', header=TRUE)
 df_0.1 <- read.table('combined_DR2_0.1.tsv', header=TRUE)
