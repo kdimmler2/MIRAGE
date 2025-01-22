@@ -1,0 +1,9 @@
+vcf_to_mask: /scratch.global/dimml002/target_wags/variant_calling/ref/wgs/pipeline/goldenPath/20241024/final_gather/no_multis.pass.joint_call.goldenPath.20241024.vcf.gz 
+vcf_to_mask_tbi: /scratch.global/dimml002/target_wags/variant_calling/ref/wgs/pipeline/goldenPath/20241024/final_gather/no_multis.pass.joint_call.goldenPath.20241024.vcf.gz.tbi
+bcftools_directory: /users/7/dimml002/miniforge3/envs/impute/bin/bcftools 
+iterations: 10
+mask_proportion: 0.2
+reference_panel: /scratch.global/dimml002/goldenPath.Phased.no_overlap.vcf.gz 
+reference_panel_tbi: /scratch.global/dimml002/goldenPath.Phased.no_overlap.vcf.gz.tbi 
+breed: Averaged
+breed_ab: SB

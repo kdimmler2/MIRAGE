@@ -1,0 +1,11 @@
+MIRAGE/*_masking_results
+MIRAGE/*.png
+MIRAGE/*.csv
+MIRAGE/plots*
+MIRAGE/*.R
+MIRAGE/*temp*
+MIRAGE/*test*
+MIRAGE/.nfsc46827f3c9467beb0000086b
+MIRAGE/.logs/*
+MIRAGE/jobs/*
+MIRAGE/.snakemake/

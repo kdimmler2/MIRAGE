@@ -6,19 +6,20 @@
 #SBATCH --mem=6gb
 #SBATCH --mail-type=ALL  
 #SBATCH --mail-user=dimml002@umn.edu 
-#SBATCH --job-name PaintedPatches
-#SBATCH -o ./jobs/%j.PaintedPatches.out
-#SBATCH -e ./jobs/%j.PaintedPatches.err
+#SBATCH --job-name MIRAGE
+#SBATCH -o ./jobs/%j.MIRAGE.out
+#SBATCH -e ./jobs/%j.MIRAGE.err
 #SBATCH -p amdsmall,amdlarge
 
 set -e
 
 cd $SLURM_SUBMIT_DIR
 
-micromamba activate impute
+source /users/7/dimml002/miniforge3/etc/profile.d/conda.sh
+conda activate impute
 
-snakemake -s PaintedPatches.smk \
-    --profile slurm.PaintedPatches/ \
+snakemake -s MIRAGE.smk \
+    --profile slurm.MIRAGE/ \
     --configfile config.yaml \
     --rerun-triggers mtime \
     --keep-going \

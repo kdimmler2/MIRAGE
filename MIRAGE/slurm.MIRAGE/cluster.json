@@ -1,20 +1,60 @@
 {
+    "split_original" :
+    {
+        "output" : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error" : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.err"
+    },
+    "prep_original" :
+    {
+        "output" : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error" : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.err"
+    },
+    "filter_maf_bins" :
+    {
+        "output" : ".logs/{rule}/chr{wildcards.chrom}/{wildcards.bin}/%j.{rule}.out",
+        "error" : ".logs/{rule}/chr{wildcards.chrom}/{wildcards.bin}/%j.{rule}.err"
+    },
+    "isolate_random_variants" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/{wildcards.bin}/%j.{rule}.out",
+        "error" : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/{wildcards.bin}/%j.{rule}.err"
+    },
     "mask" :
     {
-        "output" : ".logs/{rule}/{wildcards.itr}/%j.{rule}.out",
-        "error" : ".logs/{rule}/{wildcards.itr}/%j.{rule}.err"
+        "output" : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/{wildcards.bin}/%j.{rule}.out",
+        "error" : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/{wildcards.bin}/%j.{rule}.err"
+    },
+    "isec" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/{wildcards.bin}/%j.{rule}.out",
+        "error" : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/{wildcards.bin}/%j.{rule}.err"
+    },
+    "masked_list" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error" : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/%j.{rule}.err"
+    },
+    "combine_masked" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error" : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/%j.{rule}.err"
+    },
+    "annotate_masked" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error" : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/%j.{rule}.err"
     },
     "split_phased" :
     {
         "output" : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.out",
         "error"  : ".logs/{rule}/chr{wildcards.chrom}/%j.{rule}.err"
     },
-    "split_masked" :
+    "beagle_impute" :
     {
         "output" : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/%j.{rule}.out",
         "error"  : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/%j.{rule}.err"
     },
-    "beagle40_impute" :
+    "annotate_imputed" :
     {
         "output" : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/%j.{rule}.out",
         "error"  : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/%j.{rule}.err"
@@ -29,7 +69,17 @@
         "output" : ".logs/{rule}/{wildcards.itr}/%j.{rule}.out",
         "error"  : ".logs/{rule}/{wildcards.itr}/%j.{rule}.err"
     },
+    "get_intersect" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/%j.{rule}.err"
+    },
     "to_table" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/{wildcards.itr}/chr{wildcards.chrom}/%j.{rule}.err"
+    },
+    "combine_tables" :
     {
         "output" : ".logs/{rule}/{wildcards.itr}/%j.{rule}.out",
         "error"  : ".logs/{rule}/{wildcards.itr}/%j.{rule}.err"
@@ -50,6 +100,21 @@
         "error"  : ".logs/{rule}/{wildcards.itr}/%j.{rule}.err"
     },
     "plink_missing" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/{wildcards.itr}/%j.{rule}.err"
+    },
+    "split_masked_table" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/{wildcards.itr}/%j.{rule}.err"
+    },
+    "split_imputed_table" :
+    {
+        "output" : ".logs/{rule}/{wildcards.itr}/%j.{rule}.out",
+        "error"  : ".logs/{rule}/{wildcards.itr}/%j.{rule}.err"
+    },
+    "split_original_table" :
     {
         "output" : ".logs/{rule}/{wildcards.itr}/%j.{rule}.out",
         "error"  : ".logs/{rule}/{wildcards.itr}/%j.{rule}.err"
