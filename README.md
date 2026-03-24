@@ -1,56 +1,113 @@
-# MIRAGE
+# MIRAGE  
 ## Mixed Imputation for Reference and Alternative Genotype Estimation
 
-The MIRAGE pipeline is designed to seamlessly integrate two complementary imputation methods, maximizing genotype completion for datasets with missing data. Many genomic analyses require complete datasets and are sensitive to missing values, which are common in sequencing data. Furthermore, reference panels may lack some of the key variants needed for specific studies. MIRAGE addresses these challenges by combining Beagle 4.1 (reference-panel-based imputation) with STITCH (reference-panel-free imputation), leveraging the strengths of both approaches.
+The MIRAGE pipeline integrates two complementary imputation approaches to maximize genotype completion in datasets with missing data. Many genomic analyses require complete datasets and are sensitive to missing values, which are common in sequencing data. In addition, reference panels may lack variants relevant to specific studies.
 
-In the MIRAGE workflow, Beagle 4.1 first uses a reference panel to impute as many genotypes as possible. The partially imputed VCF is then merged with the original data, creating a comprehensive VCF file that integrates both imputed and remaining un-imputed data. This enriched dataset is subsequently processed by STITCH, which completes additional genotypes without requiring a reference panel. The result is a robust, high-coverage dataset suitable for rigorous downstream analysis, even in the presence of complex variant structures.
+MIRAGE addresses these challenges by combining:
+- **Beagle 4.1** (reference-panel-based imputation)  
+- **STITCH** (reference-panel-free imputation)  
 
-There are two usages. 1) To assess imputation accuracy in your specific dataset through a masking approach or 2) To fully impute missing data
+to leverage the strengths of both approaches.
 
-In both options, imputation is done in parallel by chromosome.
+In this workflow, Beagle 4.1 first imputes genotypes using a reference panel. The partially imputed VCF is then merged with the original data, preserving variants not present in the reference panel. This combined dataset is subsequently processed by STITCH, which imputes remaining genotypes without requiring a reference panel. The result is a high-coverage dataset suitable for downstream analyses, even with complex variant structures.
 
-### Option 1
-#### Assessing Imputation Through Masking
+---
 
-#### Inputs:
-- A VCF to be imputed
-- A reference panel (must not share any samples with the input VCF)
-- Recombination Maps (must be in the format Beagle wants)
-- The proportion of missingness to be evaluated
+## Usage Overview
 
-These are specificed in config.yaml
-Be aware:
-bcftools_directory needs to be changed to the path where your bcftools is installed
-breed and breed_ab are for use when breed-specific recombination maps are available. These can be commented out and you will need to change the beagle40_impute rule to remove the use of this parameter.
+MIRAGE supports two primary use cases:
 
-#### Workflow:
-##### MIRAGE.smk:
-The VCFs are split by chromosome. The input VCF is cleaned, and any variants with missing data are removed. Each VCF is then divided into bins by minor allele frequency (MAF). From each bin, a random 30% of all variants are selected to have genotypes masked (set to missing) at the specified missingness proportion. All intermediate VCFs are combined and then imputed using Beagle 4.1. MAF annotations are added to the final VCF.
+1. **Assessing imputation accuracy via masking**  
+2. **Full imputation of missing data**
 
-##### combine.smk:
-The imputed VCF and the original VCF are combined so that all imputed variants are present, along with the variants from the original dataset that were not found in the reference panel and therefore not available for imputation.
+In both cases, imputation is performed in parallel by chromosome.
 
-#### Output:
-A VCF that mirrors the original dataset (after removing variants with missing data) but with a specified proportion of genotypes masked and subsequently imputed. This output allows for accuracy and concordance assessment of imputed genotypes within your dataset.
+---
 
-*Evaluation is under construction.*
+## Option 1: Assessing Imputation Accuracy (Masking)
 
-### Option 2:
-#### Full Imputation of Missing Data:
+### Inputs
 
-#### Inputs:
-- A VCF to impute (should only include variants that pass filters)
-- A reference panel
+- VCF to be imputed  
+- Reference panel (must not share samples with input VCF)  
+- Recombination maps (Beagle-compatible format)  
+- Desired proportion of missingness  
 
-These are specificed in config_IO.yaml
-Be aware:
-breed and breed_ab are for use when breed-specific recombination maps are available. These can be commented out and you will need to change the beagle40_impute rule to remove the use of this parameter.
+These parameters are specified in `config.yaml`.
 
-#### Workflow:
-##### MIRAGE_IO.smk:
-The VCF files are split by chromosome, and the input VCF undergoes cleaning, including the separation of multi-allelic sites. Each chromosome-specific VCF is then imputed using Beagle 4.1, and the chromosome VCFs are combined into a fully imputed dataset.
+**Notes:**
+- `bcftools_directory` must be set to your local installation  
+- `breed` and `breed_ab` are optional (used for breed-specific recombination maps)  
 
-#### Output:
-A VCF with imputed genotypes for missing data. Note that this VCF will only contain variants that are present in the reference panel.
+---
 
-*This section is currently under development. In future versions, the resulting VCF will retain all variants from the original dataset, with imputed genotypes added wherever possible.*
+### Workflow
+
+#### `MIRAGE.smk`
+
+- Split VCF by chromosome  
+- Remove variants with missing data  
+- Bin variants by minor allele frequency (MAF)  
+- Randomly select ~30% of variants per bin  
+- Mask genotypes at specified missingness proportion  
+- Recombine intermediate VCFs  
+- Impute using Beagle 4.1  
+- Annotate final VCF with MAF  
+
+#### `combine.smk`
+
+- Merge imputed VCF with original VCF  
+- Retain:
+  - imputed variants  
+  - variants absent from the reference panel  
+
+---
+
+### Output
+
+A VCF mirroring the original dataset (after filtering), with masked genotypes re-imputed.  
+This enables evaluation of imputation accuracy and concordance.
+
+*Evaluation is currently under development.*
+
+---
+
+## Option 2: Full Imputation of Missing Data
+
+### Inputs
+
+- Filtered VCF (variants passing QC)  
+- Reference panel  
+
+Specified in `config_IO.yaml`.
+
+**Notes:**
+- `breed` and `breed_ab` are optional and may require adjusting the `beagle40_impute` rule  
+
+---
+
+### Workflow
+
+#### `MIRAGE_IO.smk`
+
+- Split VCF by chromosome  
+- Clean input VCF (including separation of multi-allelic sites)  
+- Perform imputation with Beagle 4.1 per chromosome  
+- Combine chromosome-level VCFs  
+
+---
+
+### Output
+
+A VCF containing imputed genotypes for missing data.
+
+**Note:**  
+Currently, only variants present in the reference panel are retained.
+
+*Future versions will retain all original variants with imputed genotypes added where possible.*
+
+---
+
+## Notes
+
+This repository reflects a research workflow and may require adaptation depending on the dataset and analysis goals. Scripts are modular and were developed iteratively rather than as a single automated pipeline.
